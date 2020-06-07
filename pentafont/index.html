@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pentafont demo</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/ractive"></script>
+</head>
+<body>
+  <h1>Pentafont demo</h1>
+  <div class="card" id="reactive-target"></div>
+  <script id="reactive-template" type="text/ractive">
+    <div class="card-header">Result</div>
+    <div class="card-body">
+      <p class="card-text" id="render-view">
+        <svg width="{{ getWidth() }}" height="240">
+        {{#each renderLetters(text, getWidth(), getEncoding(encoding), getRenderer(renderer)) as letter}}
+        <g fill="black">
+          {{#each letter.polygons as polygon}}
+          <polygon points="{{ pointsFormat(polygon) }}"></polygon>
+          {{/each}}
+        </g>
+        {{/each}}
+        </svg>
+      </p>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <label for="text-input">Input text</label>
+          <textarea class="form-control" id="text-input" rows="3">{{ text }}</textarea>
+        </div>
+	<div class="form-row">
+          <div class="form-group col-auto">
+            <label for="encoding-select">Encoding</label>
+            <select class="form-control" id="encoding-select" value="{{ encoding }}">
+              <option value="etaionsparse">Etaionsparse</option>
+              <option value="dotsies">Dotsies</option>
+            </select>
+          </div>
+          <div class="form-group col-auto">
+            <label for="encoding-select">Renderer</label>
+            <select class="form-control" id="renderer-select" value="{{ renderer }}">
+              <option value="etaionsparse">Etaionsparse</option>
+              <option value="dotsies">Dotsies</option>
+            </select>
+          </div>
+	</div>
+      </form>
+    </div>
+	</script>
+  <script src="pentafont.js"></script>
+</body>
+</html>
