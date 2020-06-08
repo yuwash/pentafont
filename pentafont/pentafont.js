@@ -1,4 +1,6 @@
 const config = {
+  encoding: 'etaionsparse',
+  renderer: 'etaionsparse',
   fontSize: 15,
   fontWidth: 0.2,  // monospace for now
   lineHeight: 1.5,
@@ -113,7 +115,7 @@ const renderByteDotsies = (byte_, x, y, width, height) => renderByte((
   [x + width, y + bit * height / 5],
 ], byte_, x, y, width, height)
 
-const renderLetters = (text, width, encoding, renderer) => (
+const renderLetters = (text, width, config) => (
   Array.from(text)
 ).reduce((accumulator, character) => {
   const bruttoLetterWidth = config.fontSize * (
@@ -125,6 +127,8 @@ const renderLetters = (text, width, encoding, renderer) => (
   // 2 times because the last letter and this letter follows lastPos
   const x = addRow ? 0 : lastPos.x + bruttoLetterWidth
   const y = lastPos.y + (addRow ? bruttoLineHeight : 0)
+  const encoding = getEncoding(config.encoding)
+  const renderer = getRenderer(config.renderer)
   let characterToRender = character.toLowerCase()
   if (!(characterToRender in encoding)) {
     characterToRender = '_31'
@@ -167,9 +171,8 @@ const ractive = new Ractive({
   target: '#reactive-target',
   template: '#reactive-template',
   data: {
+    config: config,
     text: 'etaion shrdl ucmfw ypvbgk jqxz,.;',
-    getEncoding: getEncoding,
-    getRenderer: getRenderer,
     getWidth: getWidth,
     pointsFormat: pointsFormat,
     renderLetters: renderLetters,

@@ -13,7 +13,7 @@
     <div class="card-body">
       <p class="card-text" id="render-view">
         <svg width="{{ getWidth() }}" height="240">
-        {{#each renderLetters(text, getWidth(), getEncoding(encoding), getRenderer(renderer)) as letter}}
+        {{#each renderLetters(text, getWidth(), config) as letter}}
         <g fill="black">
           {{#each letter.polygons as polygon}}
           <polygon points="{{ pointsFormat(polygon) }}"></polygon>
@@ -29,22 +29,29 @@
           <label for="text-input">Input text</label>
           <textarea class="form-control" id="text-input" rows="3">{{ text }}</textarea>
         </div>
-	<div class="form-row">
+        <div class="form-row">
           <div class="form-group col-auto">
             <label for="encoding-select">Encoding</label>
-            <select class="form-control" id="encoding-select" value="{{ encoding }}">
+            <select class="form-control" id="encoding-select" value="{{ config.encoding }}">
               <option value="etaionsparse">Etaionsparse</option>
               <option value="dotsies">Dotsies</option>
             </select>
           </div>
           <div class="form-group col-auto">
             <label for="encoding-select">Renderer</label>
-            <select class="form-control" id="renderer-select" value="{{ renderer }}">
+            <select class="form-control" id="renderer-select" value="{{ config.renderer }}">
               <option value="etaionsparse">Etaionsparse</option>
               <option value="dotsies">Dotsies</option>
             </select>
           </div>
-	</div>
+          <div class="form-group col-auto">
+            <label for="font-size-input">
+              Font size <span class="badge badge-info">{{ config.fontSize }}</span>
+            </label>
+            <input type="range" class="custom-range" min="8" max="80"
+              id="font-size-input" value="{{ config.fontSize }}" />
+          </div>
+        </div>
       </form>
     </div>
 	</script>
