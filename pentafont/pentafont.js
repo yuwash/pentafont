@@ -74,6 +74,41 @@ const encodingEtaisparse = {
   _31: 0b11111,
 }
 
+const encodingLatinoid = {
+  ' ': 0,
+  a: 0b11000,
+  b: 0b01101,
+  c: 0b10010,
+  d: 0b01001,
+  e: 0b10110,
+  f: 0b01110,
+  g: 0b11010,
+  h: 0b11001,
+  i: 0b00001,
+  j: 0b00010,
+  k: 0b11101,
+  l: 0b00101,
+  m: 0b11100,
+  n: 0b10011,
+  o: 0b00100,
+  p: 0b01100,
+  q: 0b10100,
+  r: 0b11110,
+  s: 0b10001,
+  t: 0b10101,
+  u: 0b00110,
+  v: 0b00011,
+  w: 0b00111,
+  x: 0b11011,
+  y: 0b01011,
+  z: 0b01010,
+  '.': 0b10000,
+  ',': 0b01000,
+  _29: 0b01111,
+  _30: 0b10111,
+  _31: 0b11111,
+}
+
 const renderByte = (bitRenderer, byte_, x, y, width, height) => (
   [0, 1, 2, 3, 4]
 ).reduce((accumulator, bit) => {
@@ -115,6 +150,20 @@ const renderByteDotsies = (byte_, x, y, width, height) => renderByte((
   [x + width, y + bit * height / 5],
 ], byte_, x, y, width, height)
 
+const latinoidPolygons = [
+  [ [0, 0], [1, 5], [2, 5], [2, 0] ],
+  [ [4, 0], [2, 5], [4, 5], [5, 2] ],
+  [ [1, 5], [1, 6], [5, 6], [4, 5] ],
+  [ [1, 6], [0, 8], [2, 10], [3, 6] ],
+  [ [2, 6], [4, 10], [5, 10], [4, 6] ],
+]
+
+const renderByteLatinoid = (byte_, x, y, width, height) => renderByte((
+    bit, x, y, width, height) => {
+  return latinoidPolygons[bit].map(([x_, y_]) => [
+    x + x_ * width / 5, y + y_ * height / 10])
+}, byte_, x, y, width, height)
+
 const renderLetters = (text, width, config) => (
   Array.from(text)
 ).reduce((accumulator, character) => {
@@ -151,11 +200,13 @@ const pointsFormat = points => points.reduce((accumulator, point) => {
 const getEncoding = name => ({
   etaionsparse: encodingEtaisparse,
   dotsies: encodingDotsies,
+  latinoid: encodingLatinoid,
 }[name] || encodingEtaisparse)
 
 const getRenderer = name => ({
   etaionsparse: renderByteEtaionsparse,
   dotsies: renderByteDotsies,
+  latinoid: renderByteLatinoid,
 }[name] || renderByteEtaionsparse)
 
 const getWidth = () => {
