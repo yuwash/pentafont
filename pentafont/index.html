@@ -12,8 +12,8 @@
     <div class="card-header">Result</div>
     <div class="card-body">
       <p class="card-text" id="render-view">
-        <svg width="{{ getWidth() }}" height="240">
-        {{#each renderLetters(text, getWidth(), config) as letter}}
+        <svg width="{{ width }}" height="240">
+        {{#each renderLetters(text, width, config) as letter}}
         <g fill="black">
           {{#each letter.polygons as polygon}}
           <polygon points="{{ pointsFormat(polygon) }}"></polygon>

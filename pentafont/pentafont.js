@@ -224,8 +224,13 @@ const ractive = new Ractive({
   data: {
     config: config,
     text: 'etaion shrdl ucmfw ypvbgk jqxz,.;',
-    getWidth: getWidth,
+    width: config.minWidth,
     pointsFormat: pointsFormat,
     renderLetters: renderLetters,
-  }
+  },
+  onrender: function () {
+    this.set('width', getWidth())
+  },
 })
+
+window.addEventListener('resize', () => ractive.onrender())
