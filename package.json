@@ -1,0 +1,17 @@
+{
+  "name": "pentafont",
+  "version": "1.0.0",
+  "description": "Simple in-browser demonstration of five-bit fonts like dotsies and the experimental etaisparse",
+  "repository": "https://github.com/yuwash/pentafont.git",
+  "author": "Yushin Washio <yuwash@yandex.com>",
+  "license": "MIT",
+  "scripts": {
+    "watch": "parcel pentafont/index.html",
+    "build": "parcel build pentafont/index.html --public-url /pentafont",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0",
+    "parcel-bundler": "^1.12.4"
+  }
+}
