@@ -224,9 +224,30 @@ const ractive = new Ractive({
   data: {
     config: config,
     text: 'etaion shrdl ucmfw ypvbgk jqxz,.;',
+    imageFilename: 'untitled.svg',
+    imageURL: '#',
     width: config.minWidth,
     pointsFormat: pointsFormat,
     renderLetters: renderLetters,
+    updateImageFilename: function () {
+      this.set(
+        'imageFilename',
+        `${ (this.get('text') || 'untitled').substring(0, 15) }.svg`)
+    },
+    updateImageURL: function () {
+      const linkElement = this.find('#image-link')
+      const renderElement = this.find('#render-view')
+      const svgFile = new Blob([renderElement.innerHTML], { type: 'text/svg' })
+      this.set('imageURL', URL.createObjectURL(svgFile))
+    },
+  },
+  observe: {
+    'text': function () {
+      this.get('updateImageFilename')()
+    },
+    'text width config.*': function () {
+      this.get('updateImageURL')()
+    },
   },
   onrender: function () {
     this.set('width', getWidth())
