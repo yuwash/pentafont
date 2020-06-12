@@ -5,7 +5,7 @@ const config = {
   fontWidth: 0.2,  // monospace for now
   lineHeight: 1.5,
   letterSpacing: 0,
-  minWidth: 640,
+  minWidth: 240,
 }
 
 const encodingDotsies = {
