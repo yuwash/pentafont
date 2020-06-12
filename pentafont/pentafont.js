@@ -150,6 +150,11 @@ const renderByteDotsies = (byte_, x, y, width, height) => renderByte((
   [x + width, y + bit * height / 5],
 ], byte_, x, y, width, height)
 
+const makeTransform = (x, y, width, height) => ([x_, y_]) => [
+  x + x_ * width / 5,
+  y + y_ * height / 10,
+]
+
 const latinoidPolygons = [
   [ [0, 0], [1, 5], [2, 5], [2, 0] ],
   [ [4, 0], [2, 5], [4, 5], [5, 2] ],
@@ -160,8 +165,20 @@ const latinoidPolygons = [
 
 const renderByteLatinoid = (byte_, x, y, width, height) => renderByte((
     bit, x, y, width, height) => {
-  return latinoidPolygons[bit].map(([x_, y_]) => [
-    x + x_ * width / 5, y + y_ * height / 10])
+  return latinoidPolygons[bit].map(makeTransform(x, y, width, height))
+}, byte_, x, y, width, height)
+
+const etaionsparsePentagonPolygons = [
+  [ [3, 1], [4, 3], [5, 2], [5, 1], [4, 0] ],
+  [ [0, 2], [0, 4], [2, 6], [4, 3], [2, 0] ],
+  [ [3, 5], [4, 7], [5, 6], [5, 4], [4, 3] ],
+  [ [0, 6], [0, 8], [2, 10], [4, 7], [2, 4] ],
+  [ [3, 9], [4, 10], [5, 9], [5, 8], [4, 7] ],
+]
+
+const renderByteEtaionsparsePentagon = (byte_, x, y, width, height) => renderByte((
+    bit, x, y, width, height) => {
+  return etaionsparsePentagonPolygons[bit].map(makeTransform(x, y, width, height))
 }, byte_, x, y, width, height)
 
 const renderLetters = (text, width, config) => (
@@ -205,6 +222,7 @@ const getEncoding = name => ({
 
 const getRenderer = name => ({
   etaionsparse: renderByteEtaionsparse,
+  etaionsparsePentagon: renderByteEtaionsparsePentagon,
   dotsies: renderByteDotsies,
   latinoid: renderByteLatinoid,
 }[name] || renderByteEtaionsparse)
