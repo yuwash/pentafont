@@ -2,10 +2,11 @@ const config = {
   encoding: 'etaionsparse',
   renderer: 'etaionsparse',
   fontSize: 15,
-  fontWidth: 0.2,  // monospace for now
+  fontWidth: 0.2,  // monospace or maximum width
   lineHeight: 1.5,
   letterSpacing: 0,
   minWidth: 240,
+  monospace: false,
 }
 
 const encodingDotsies = {
@@ -194,18 +195,32 @@ const renderByteEtaionsparsePen = (byte_, x, y, width, height) => renderByte((
   return etaionsparsePenPolygons[bit].map(makeTransform(x, y, width, height))
 }, byte_, x, y, width, height)
 
+const getMaxX = (polygons) => polygons.reduce((max, points) => (
+  points.reduce((max_, [x, y]) => (max_ < x ? x : max_), max)
+), 0)  // assuming not all points are in negative area
+
+const getMinX = (polygons, start) => polygons.reduce((min, points) => (
+  points.reduce((min_, [x, y]) => (x < min_ ? x : min_), min)
+), start)
+
+const movePolygons = (polygons, deltaX) => polygons.map(
+  points => points.map(([x, y]) => [x + deltaX, y]))
+
 const renderLetters = (text, width, config) => (
   Array.from(text)
 ).reduce((accumulator, character) => {
-  const bruttoLetterWidth = config.fontSize * (
+  const maxBruttoLetterWidth = config.fontSize * (
     config.fontWidth + config.letterSpacing)
   const bruttoLineHeight = config.fontSize * config.lineHeight
-  const lastPos = accumulator.length ? accumulator[accumulator.length - 1] : {
-    x: -bruttoLetterWidth, y: 0 }
-  const addRow = width < lastPos.x + 2 * bruttoLetterWidth
-  // 2 times because the last letter and this letter follows lastPos
-  const x = addRow ? 0 : lastPos.x + bruttoLetterWidth
-  const y = lastPos.y + (addRow ? bruttoLineHeight : 0)
+  const lastPos = (
+    accumulator.length ? accumulator[accumulator.length - 1] : null)
+  const xWithoutRow = lastPos ? lastPos.x + lastPos.bruttoLetterWidth : 0
+  const addRow = lastPos && width < xWithoutRow + maxBruttoLetterWidth
+  // the last letter and this letter follows lastPos
+  // currently always using max (monospace) width for this thus not
+  // using the canvas space most efficiently
+  const x = addRow ? 0 : xWithoutRow
+  const y = lastPos ? (lastPos.y + (addRow ? bruttoLineHeight : 0)) : 0
   const encoding = getEncoding(config.encoding)
   const renderer = getRenderer(config.renderer)
   let characterToRender = character.toLowerCase()
@@ -214,12 +229,15 @@ const renderLetters = (text, width, config) => (
   }
   const fontHeight = config.fontSize
   const fontWidth = config.fontSize * config.fontWidth
-  accumulator.push({
-    polygons: renderer(
-      encoding[characterToRender], x, y, fontWidth, fontHeight),
-    x: x,
-    y: y,
-  })
+  const polygonsMonospace = renderer(
+      encoding[characterToRender], x, y, fontWidth, fontHeight)
+  const polygons = config.monospace ? polygonsMonospace : movePolygons(
+    polygonsMonospace,
+    x - getMinX(polygonsMonospace, x + maxBruttoLetterWidth))
+  const bruttoLetterWidth = (
+    (config.monospace || !polygons.length)  // whitespace has no polygons
+    ? maxBruttoLetterWidth : getMaxX(polygons) - x)
+  accumulator.push({ polygons, x, y, bruttoLetterWidth })
   return accumulator
 }, [])
 
