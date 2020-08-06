@@ -156,6 +156,11 @@ const makeTransform = (x, y, width, height) => ([x_, y_]) => [
   y + y_ * height / 10,
 ]
 
+const makePolygonByteRenderer = polygons => (byte_, x, y, width, height) => renderByte((
+    bit, x, y, width, height) => {
+  return polygons[bit].map(makeTransform(x, y, width, height))
+}, byte_, x, y, width, height)
+
 const latinoidPolygons = [
   [ [0, 0], [1, 5], [2, 5], [2, 1], [3, 0] ],
   [ [4, 0], [3, 3], [1, 4], [2, 5], [4, 4], [5, 2] ],
@@ -164,11 +169,8 @@ const latinoidPolygons = [
   [ [2, 5], [2, 6], [4, 10], [5, 10], [4, 7] ],
 ]
 
-const renderByteLatinoid = (byte_, x, y, width, height) => renderByte((
-    bit, x, y, width, height) => {
-  return latinoidPolygons[bit].map(makeTransform(x, y, width, height))
-}, byte_, x, y, width, height)
-
+const renderByteLatinoid = makePolygonByteRenderer(latinoidPolygons)
+  
 const etaionsparsePentagonPolygons = [
   [ [2, 1], [3, 3], [5, 2], [5, 0], [3, 0] ],
   [ [0, 2], [0, 3], [2, 1], [3, 3], [1, 4], [0, 3], [0, 4], [2, 5], [4, 3], [2, 0] ],
@@ -177,10 +179,8 @@ const etaionsparsePentagonPolygons = [
   [ [2, 9], [3, 10], [5, 10], [5, 8], [3, 7] ],
 ]
 
-const renderByteEtaionsparsePentagon = (byte_, x, y, width, height) => renderByte((
-    bit, x, y, width, height) => {
-  return etaionsparsePentagonPolygons[bit].map(makeTransform(x, y, width, height))
-}, byte_, x, y, width, height)
+const renderByteEtaionsparsePentagon = makePolygonByteRenderer(
+  etaionsparsePentagonPolygons)
 
 const etaionsparsePenPolygons = [
   [ [2, 0], [3, 3], [4, 3], [5, 1], [5, 0] ],
@@ -190,10 +190,8 @@ const etaionsparsePenPolygons = [
   [ [3, 7], [2, 10], [5, 10], [5, 9], [4, 7] ],
 ]
 
-const renderByteEtaionsparsePen = (byte_, x, y, width, height) => renderByte((
-    bit, x, y, width, height) => {
-  return etaionsparsePenPolygons[bit].map(makeTransform(x, y, width, height))
-}, byte_, x, y, width, height)
+const renderByteEtaionsparsePen = makePolygonByteRenderer(
+  etaionsparsePenPolygons)
 
 const getMaxX = (polygons) => polygons.reduce((max, points) => (
   points.reduce((max_, [x, y]) => (max_ < x ? x : max_), max)
