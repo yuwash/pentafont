@@ -209,11 +209,16 @@ const movePolygons = (polygons, deltaX) => polygons.map(
 const renderLetters = (text, width, config) => (
   Array.from(text)
 ).reduce((accumulator, character) => {
-  const maxBruttoLetterWidth = config.fontSize * (
-    config.fontWidth + config.letterSpacing)
   const bruttoLineHeight = config.fontSize * config.lineHeight
   const lastPos = (
     accumulator.length ? accumulator[accumulator.length - 1] : null)
+  if (character === '\n') {
+    accumulator.push({
+      x: 0, bruttoLetterWidth: 0, y: lastPos.y + bruttoLineHeight })
+    return accumulator
+  }
+  const maxBruttoLetterWidth = config.fontSize * (
+    config.fontWidth + config.letterSpacing)
   const xWithoutRow = lastPos ? lastPos.x + lastPos.bruttoLetterWidth : 0
   const addRow = lastPos && width < xWithoutRow + maxBruttoLetterWidth
   // the last letter and this letter follows lastPos
