@@ -193,6 +193,17 @@ const etaionsparsePenPolygons = [
 const renderByteEtaionsparsePen = makePolygonByteRenderer(
   etaionsparsePenPolygons)
 
+const etaionsparseCirclePolygons = [
+  [ [2, 0], [2, 2], [3, 2], [3, 4], [5, 3], [5, 2], [4, 0] ],
+  [ [0, 2], [0, 5], [1, 6], [1, 4], [2, 2], [3, 2], [2, 0], [1, 0] ],
+  [ [3, 4], [3, 6], [5, 7], [5, 3] ],
+  [ [0, 5], [0, 8], [1, 10], [2, 10], [3, 8], [2, 8], [1, 6], [1, 4] ],
+  [ [2, 8], [2, 10], [4, 10], [5, 8], [5, 7], [3, 6], [3, 8] ],
+]
+
+const renderByteEtaionsparseCircle = makePolygonByteRenderer(
+  etaionsparseCirclePolygons)
+
 const getMaxX = (polygons) => polygons.reduce((max, points) => (
   points.reduce((max_, [x, y]) => (max_ < x ? x : max_), max)
 ), 0)  // assuming not all points are in negative area
@@ -256,6 +267,7 @@ const getEncoding = name => ({
 
 const getRenderer = name => ({
   etaionsparse: renderByteEtaionsparse,
+  etaionsparseCircle: renderByteEtaionsparseCircle,
   etaionsparsePen: renderByteEtaionsparsePen,
   etaionsparsePentagon: renderByteEtaionsparsePentagon,
   dotsies: renderByteDotsies,
